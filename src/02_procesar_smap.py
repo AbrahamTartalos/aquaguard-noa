@@ -4,12 +4,18 @@ import h5py
 import numpy as np
 import pandas as pd
 from pathlib import Path
+import pathlib   # nuevo import
+
+# --- Determinar rutas absolutas ---
+SCRIPT_DIR = pathlib.Path(__file__).parent.resolve()   # carpeta donde está este script (src/)
+PROJECT_DIR = SCRIPT_DIR.parent                        # carpeta raíz del proyecto
+DATA_DIR = PROJECT_DIR / "data" / "raw"                # datos crudos fuera de src
+PROCESSED_DIR = PROJECT_DIR / "data" / "processed"     # datos procesados fuera de src
 
 earthaccess.login()
 
 # --- Configuración ---
 bbox = (-67.5, -24.5, -66.0, -23.5)  # cuenca San Antonio de los Cobres
-DATA_DIR = Path("data/raw")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # --- Buscar y descargar archivos recientes ---
@@ -73,7 +79,7 @@ def extraer_humedad_cuenca(filepath, bbox):
 
 # --- Procesar archivos descargados ---
 registros = []
-for f in sorted(Path(DATA_DIR).glob("*.h5")):
+for f in sorted(DATA_DIR.glob("*.h5")):
     resultado = extraer_humedad_cuenca(f, bbox)
     if resultado:
         registros.append(resultado)
@@ -81,7 +87,7 @@ for f in sorted(Path(DATA_DIR).glob("*.h5")):
 # --- Guardar resultado ---
 if registros:
     df = pd.DataFrame(registros).sort_values('fecha')
-    out = Path("data/processed/smap_cuenca.csv")
+    out = PROCESSED_DIR / "smap_cuenca.csv"
     out.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(out, index=False)
     print(f"\nGuardado en {out}")
