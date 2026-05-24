@@ -1,0 +1,4 @@
+src/data/raw/*.h5
+data/raw/*.h5
+src/data/processed/*.csv
+data/processed/*.csv
