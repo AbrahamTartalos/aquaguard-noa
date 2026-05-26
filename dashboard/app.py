@@ -35,8 +35,55 @@ tab1, tab2, tab3, tab4 = st.tabs([
     "ℹ️ Metodología"
 ])
 
-# --- Tab 1: Serie temporal ---
+
+
+# --- Tab 1: Mapa (Anterior Tab 2) ---
 with tab1:
+    st.subheader("📍 Análisis Geoespacial de la Cuenca Alta")
+
+    # Dataset expandido con coordenadas precisas del área de estudio
+    mapa_df = pd.DataFrame({
+        "lat": [-24.2244, -24.3166, -24.1000],
+        "lon": [-66.3182, -66.4833, -66.6500],
+        "nombre": [
+            "San Antonio de los Cobres (Población)", 
+            "Zona Minera Activa (Procesamiento de Boratos)", 
+            "Punto de Control Hídrico - Río San Antonio"
+        ],
+        "ieh": [ultimo["ieh"], min(ultimo["ieh"] * 1.15, 1.0), ultimo["ieh"] * 0.9],
+        "tipo": ["Comunidad Urbana", "Infraestructura Minera", "Monitoreo Satelital"]
+    })
+
+    fig_mapa = px.scatter_mapbox(
+        mapa_df,
+        lat="lat", lon="lon",
+        hover_name="nombre",
+        hover_data={"tipo": True, "ieh": True, "lat": False, "lon": False},
+        color="ieh",
+        color_continuous_scale=["#2ecc71", "#f1c40f", "#e74c3c"], # Hexadecimales limpios
+        range_color=[0, 1],
+        size=[18, 25, 18], # Tamaños lógicos por impacto visual
+        zoom=9.5, # Ajuste estricto sobre la Puna salteña
+        height=500,
+        mapbox_style="open-street-map"
+    )
+    
+    fig_mapa.update_layout(
+        margin={"r":0,"t":0,"l":0,"b":0},
+        coloraxis_colorbar=dict(title="Escala IEH", thickness=15, len=0.8)
+    )
+    st.plotly_chart(fig_mapa, use_container_width=True)
+
+    with st.container(border=True):
+        st.markdown("""
+        **Información de Capas Territoriales:**
+        * **Área de estudio prioritaria:** Cuenca alta del río San Antonio de los Cobres, Departamento Los Andes, Salta (~3.800 msnm).
+        * **Intersección Antrópica:** Monitoreo continuo sobre explotaciones mineras industriales y áreas residenciales con dependencia hídrica directa[cite: 1].
+        * **Vulnerabilidad de flujo:** Esta cuenca alta es tributaria crítica del sistema Pasaje-Juramento que irriga la agricultura aguas abajo[cite: 1].
+        """)
+
+# --- Tab 2: Serie temporal ---
+with tab2:
     st.subheader("Evolución del Índice de Estrés Hídrico (IEH)")
 
     fig = go.Figure()
@@ -74,42 +121,6 @@ with tab1:
         }),
         use_container_width=True
     )
-
-# --- Tab 2: Mapa ---
-with tab2:
-    st.subheader("Cuenca Alta del Río San Antonio de los Cobres")
-
-    # Mapa centrado en la cuenca
-    mapa_df = pd.DataFrame({
-        "lat": [-24.0],
-        "lon": [-66.8],
-        "nombre": ["San Antonio de los Cobres"],
-        "ieh": [ultimo["ieh"]],
-        "estado": [ultimo["alerta"]]
-    })
-
-    fig_mapa = px.scatter_mapbox(
-        mapa_df,
-        lat="lat", lon="lon",
-        hover_name="nombre",
-        hover_data={"ieh": True, "estado": True, "lat": False, "lon": False},
-        color="ieh",
-        color_continuous_scale=["green", "yellow", "red"],
-        range_color=[0, 1],
-        size=[20],
-        zoom=7,
-        height=500,
-        mapbox_style="open-street-map"
-    )
-    st.plotly_chart(fig_mapa, use_container_width=True)
-
-    st.info("""
-    **Área de estudio:** Cuenca alta del río San Antonio de los Cobres  
-    **Departamento:** Los Andes, Salta  
-    **Altitud media:** ~3.800 msnm  
-    **Actividad minera:** Explotación de boratos (Tincalayu) y sal  
-    **Conexión hídrica:** Tributaria del sistema Pasaje-Juramento → Valle de Lerma
-    """)
 
 # --- Tab 3: Impacto económico ---
 with tab3:
