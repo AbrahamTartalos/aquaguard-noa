@@ -27,11 +27,11 @@ col4.metric("Estado", ultimo["alerta"])
 
 st.divider()
 
-# Tabs
+# Tabs reorganizados por jerarquía analítica
 tab1, tab2, tab3, tab4 = st.tabs([
-    "📈 Serie Temporal",
     "🗺️ Mapa de Cuenca",
-    "💰 Impacto Económico",
+    "📈 Serie Temporal",
+    "👥 Impacto Socioeconómico",
     "ℹ️ Metodología"
 ])
 
