@@ -82,45 +82,52 @@ with tab1:
         * **Vulnerabilidad de flujo:** Esta cuenca alta es tributaria crítica del sistema Pasaje-Juramento que irriga la agricultura aguas abajo[cite: 1].
         """)
 
-# --- Tab 2: Serie temporal ---
+
+# --- Tab 2: Serie temporal (Anterior Tab 1) ---
 with tab2:
-    st.subheader("Evolución del Índice de Estrés Hídrico (IEH)")
+    st.subheader("📈 Evolución Histórica del Índice de Estrés Hídrico (IEH)")
 
     fig = go.Figure()
 
-    # Línea IEH
+    # Línea IEH corregida visualmente
     fig.add_trace(go.Scatter(
         x=df["fecha"], y=df["ieh"],
         mode="lines+markers",
-        name="IEH",
-        line=dict(color="#e74c3c", width=2),
-        marker=dict(size=8)
+        name="IEH Satelital",
+        line=dict(color="#e74c3c", width=2.5),
+        marker=dict(size=6, symbol="circle"),
+        connectgaps=False # Evita líneas ficticias cruzando meses sin datos
     ))
 
-    # Umbrales
-    fig.add_hline(y=0.7, line_dash="dash", line_color="red",
-                  annotation_text="Umbral crítico (0.7)")
-    fig.add_hline(y=0.4, line_dash="dash", line_color="orange",
-                  annotation_text="Umbral moderado (0.4)")
+    # Umbrales con mejor tipografía y posición corregida
+    fig.add_hline(y=0.7, line_dash="dash", line_color="#c0392b",
+                  annotation_text="Umbral Crítico (0.7)", annotation_position="top right")
+    fig.add_hline(y=0.4, line_dash="dash", line_color="#d35400",
+                  annotation_text="Umbral Moderado (0.4)", annotation_position="top right")
 
     fig.update_layout(
-        xaxis_title="Fecha",
-        yaxis_title="IEH (0=normal, 1=crítico)",
-        yaxis=dict(range=[0, 1.1]),
-        height=400
+        xaxis_title="Línea de Tiempo",
+        yaxis_title="Índice IEH",
+        yaxis=dict(range=[0, 1.05], tickformat=".1f"), # Formato numérico estricto para evitar bugs visuales
+        margin={"t":20, "b":40},
+        height=380,
+        template="plotly_dark"
     )
     st.plotly_chart(fig, use_container_width=True)
 
-    st.subheader("Tabla de datos")
-    st.dataframe(
-        df[["fecha", "sm_media", "ieh", "alerta"]].rename(columns={
-            "fecha": "Fecha",
-            "sm_media": "Humedad suelo (m³/m³)",
-            "ieh": "IEH",
-            "alerta": "Estado"
-        }),
-        use_container_width=True
-    )
+    with st.container(border=True):
+        st.markdown("### 📋 Registro de Datos Históricos Normalizados")
+        st.dataframe(
+            df[["fecha", "sm_media", "ieh", "alerta"]],
+            column_config={
+                "fecha": st.column_config.DateColumn("Fecha Medición", format="DD/MM/YYYY"),
+                "sm_media": st.column_config.NumberColumn("Humedad Suelo (m³/m³)", format="%.4f"),
+                "ieh": st.column_config.NumberColumn("Índice IEH", format="%.2f"),
+                "alerta": st.column_config.TextColumn("Estado de Alerta")
+            },
+            hide_index=True,
+            use_container_width=True
+        )
 
 # --- Tab 3: Impacto económico ---
 with tab3:
