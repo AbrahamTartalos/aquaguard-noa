@@ -21,6 +21,7 @@
 7. [Resultados y visualizaciones](#7-resultados-y-visualizaciones)
 8. [Limitaciones y trabajo futuro](#8-limitaciones-y-trabajo-futuro)
 9. [Referencias](#9-referencias)
+10. [Cómo ejecutar el proyecto](#10-cómo-ejecutar-el-proyecto)
 
 ---
 
@@ -300,8 +301,6 @@ Sin embargo, el impacto potencial de esta expansión es significativamente mayor
 
 ## 9. Referencias
 
-> 🔧 *Sección a completar al cierre de la hackathon*
-
 ### Referencias preliminares
 
 - CONAE (2023). *Misión SAOCOM: productos y aplicaciones*. https://saocom.invap.com.ar
@@ -313,7 +312,7 @@ Sin embargo, el impacto potencial de esta expansión es significativamente mayor
 
 ---
 
-## Cómo ejecutar el proyecto
+## 10. Cómo ejecutar el proyecto
 
 ### Requisitos
 - Miniconda instalado
