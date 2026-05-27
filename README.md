@@ -313,5 +313,37 @@ Sin embargo, el impacto potencial de esta expansión es significativamente mayor
 
 ---
 
-*Documento creado el 24 de mayo de 2026 — versión hackathon*  
-*Próxima actualización: *
+## Cómo ejecutar el proyecto
+
+### Requisitos
+- Miniconda instalado
+- Cuenta en NASA Earthdata: https://urs.earthdata.nasa.gov
+
+### Instalación
+```bash
+conda create -n aquaguard python=3.11 -c conda-forge -y
+conda activate aquaguard
+conda install -c conda-forge lightgbm xarray h5py h5netcdf netCDF4 geopandas earthaccess streamlit plotly pandas numpy scikit-learn shap psutil pyproj folium -y
+```
+
+### Credenciales NASA
+```bash
+python -c "import earthaccess; earthaccess.login(strategy='interactive', persist=True)"
+```
+
+### Pipeline completo
+```bash
+python src/01_descarga_smap.py
+python src/02_procesar_smap.py
+python src/03_calcular_ieh.py
+```
+
+### Dashboard
+```bash
+streamlit run dashboard/app.py
+```
+---
+
+*Documento creado el 23 de mayo de 2026*
+ 
+*Próxima actualización: Junio*
